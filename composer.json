@@ -1,14 +1,24 @@
 {
     "name": "claudsonm/ufs-apisistemas",
     "description": "Um simples pacote para consumir os serviços da APISistemas da UFS.",
+    "homepage": "https://github.com/claudsonm/ufs-apisistemas",
     "license": "MIT",
     "authors": [
         {
             "name": "Claudson Martins",
-            "email": "claudson@outlook.com"
+            "email": "claudson@outlook.com",
+            "homepage": "https://claudsonmartins.com/"
         }
     ],
     "require": {
         "guzzlehttp/guzzle": "^6.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "APISistemas\\": "src/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true
     }
 }
