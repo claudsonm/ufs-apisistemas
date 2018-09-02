@@ -13,12 +13,28 @@
     "require": {
         "guzzlehttp/guzzle": "^6.3"
     },
+    "require-dev": {
+        "vlucas/phpdotenv": "^2.5"
+    },
     "autoload": {
         "psr-4": {
             "UFS\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        },
+        "files": [
+            "tests/helpers.php"
+        ]
+    },
     "config": {
         "optimize-autoloader": true
+    },
+    "scripts": {
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ]
     }
 }

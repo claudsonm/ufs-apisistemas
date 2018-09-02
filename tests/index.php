@@ -1,8 +1,8 @@
 <?php
-    require '../vendor/autoload.php';
+require '../vendor/autoload.php';
 
-    $api = new UFS\APISistemas('SEU_ACCESS_TOKEN', true);
-    $result = $api->self();
+$api = new UFS\APISistemas(env('ACESS_TOKEN'), true);
+$result = $api->self();
 
-    header('Content-Type: application/json');
-    echo json_encode($result);
+header('Content-Type: application/json');
+echo json_encode($result);
