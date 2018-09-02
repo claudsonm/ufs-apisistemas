@@ -1,8 +1,7 @@
 # UFS APISistemas
-
-[![GitHub release](https://img.shields.io/github/release/qubyte/rubidium.svg?style=flat-square)](https://github.com/claudsonm/ufs-apisistemas/releases)
-[![Packagist](https://img.shields.io/packagist/dt/doctrine/orm.svg?style=flat-square)](https://packagist.org/packages/claudsonm/ufs-apisistemas)
-[![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)](MIT)
+[![Packagist](https://img.shields.io/packagist/v/claudsonm/ufs-apisistemas.svg?style=flat-square)](https://github.com/claudsonm/ufs-apisistemas/releases)
+[![Packagist](https://img.shields.io/packagist/dt/claudsonm/ufs-apisistemas.svg?style=flat-square)](https://packagist.org/packages/claudsonm/ufs-apisistemas)
+[![GitHub](https://img.shields.io/github/license/claudsonm/ufs-apisistemas.svg?style=flat-square)](https://github.com/claudsonm/ufs-apisistemas/blob/master/LICENSE)
 
 
 Um simples pacote para consumir os serviços disponibilizados pela API da UFS 
