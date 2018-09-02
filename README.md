@@ -1,8 +1,7 @@
 # UFS APISistemas
-[![Packagist](https://img.shields.io/packagist/v/claudsonm/ufs-apisistemas.svg?style=flat-square)](https://github.com/claudsonm/ufs-apisistemas/releases)
-[![Packagist](https://img.shields.io/packagist/dt/claudsonm/ufs-apisistemas.svg?style=flat-square)](https://packagist.org/packages/claudsonm/ufs-apisistemas)
-[![GitHub](https://img.shields.io/github/license/claudsonm/ufs-apisistemas.svg?style=flat-square)](https://github.com/claudsonm/ufs-apisistemas/blob/master/LICENSE)
-
+[![Latest Version](https://badgen.net/github/release/claudsonm/ufs-apisistemas)](https://github.com/claudsonm/ufs-apisistemas/releases)
+[![Total Downloads](https://poser.pugx.org/claudsonm/ufs-apisistemas/downloads)](https://packagist.org/packages/claudsonm/ufs-apisistemas)
+[![License](https://poser.pugx.org/claudsonm/ufs-apisistemas/license)](https://packagist.org/packages/claudsonm/ufs-apisistemas)
 
 Um simples pacote para consumir os serviços disponibilizados pela API da UFS 
 (Universidade Federal de Sergipe).
