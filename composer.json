@@ -1,0 +1,14 @@
+{
+    "name": "claudsonm/ufs-apisistemas",
+    "description": "Um simples pacote para consumir os serviços da APISistemas da UFS.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Claudson Martins",
+            "email": "claudson@outlook.com"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^6.3"
+    }
+}
