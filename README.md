@@ -14,8 +14,10 @@ Na pasta do seu projeto, execute o comando `composer require claudsonm/ufs-apisi
 ```php
 require 'vendor/autoload.php';
 
-$api = new UFS\APISistemas('SEU_ACCESS_TOKEN', true);
+$api = new \UFS\APISistemas(env('ACESS_TOKEN'), true);
 $result = $api->self();
+$result = $api->get('departamentos', ['limit' => 10]);
+$result = $api->arquivo(env('FILE_ID'), env('FILE_KEY'));
 // Fique atento, novos métodos estão sendo criados.
 
 header('Content-Type: application/json');
