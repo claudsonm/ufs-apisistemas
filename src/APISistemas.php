@@ -15,6 +15,12 @@ class APISistemas
 
     protected $httpClient;
 
+    /**
+     * Cria uma nova instância da APISistemas.
+     *
+     * @param  string  $accessToken
+     * @param  bool  $development
+     */
     public function __construct(string $accessToken, bool $development = false)
     {
         $this->accessToken = $accessToken;
@@ -23,23 +29,37 @@ class APISistemas
         ]);
     }
 
-    public function get(string $path)
+    /**
+     * Faz a requisição ao caminho informado, podendo utilizar query strings.
+     *
+     * @param  string  $path
+     * @param  array|null  $query
+     * @return mixed|string
+     */
+    public function get(string $path, array $query = null)
     {
         try {
-            $response = $this->httpClient->request('GET', $path, [
-                'headers' => [
-                    'Authorization' => 'Bearer '.$this->accessToken,
-                    'Accept' => 'application/json',
-                ],
-            ]);
+            $options['headers'] = [
+                'Authorization' => 'Bearer '.$this->accessToken,
+                'Accept' => 'application/json',
+            ];
+            if (! empty($query)) {
+                $options['query'] = $query;
+            }
+            $response = $this->httpClient->request('GET', $path, $options);
             $content = $response->getBody()->getContents();
 
             return json_decode($content);
         } catch (GuzzleException $e) {
-            var_dump($e);
+            return $e->getMessage();
         }
     }
 
+    /**
+     * Realiza uma requisição ao endpoint que retorna os dados do usuário.
+     *
+     * @return mixed|string
+     */
     public function self()
     {
         $response = $this->get('usuario');
