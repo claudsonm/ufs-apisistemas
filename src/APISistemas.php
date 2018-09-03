@@ -46,7 +46,7 @@ class APISistemas
      *
      * @param  string  $path
      * @param  array|null  $query
-     * @return mixed|string
+     * @return array|mixed
      */
     public function get(string $path, array $query = null)
     {
@@ -62,7 +62,10 @@ class APISistemas
 
             return json_decode($content);
         } catch (GuzzleException $e) {
-            return $e->getMessage();
+            return [
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+            ];
         }
     }
 
