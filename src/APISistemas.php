@@ -30,6 +30,18 @@ class APISistemas
     }
 
     /**
+     * Retorna um arquivo da APISistemas.
+     *
+     * @param  int  $id
+     * @param  string  $key
+     * @return mixed|string
+     */
+    public function arquivo(int $id, string $key)
+    {
+        return $this->get('arquivo/'.$id, ['key' => $key]);
+    }
+
+    /**
      * Faz a requisição ao caminho informado, podendo utilizar query strings.
      *
      * @param  string  $path
@@ -41,7 +53,6 @@ class APISistemas
         try {
             $options['headers'] = [
                 'Authorization' => 'Bearer '.$this->accessToken,
-                'Accept' => 'application/json',
             ];
             if (! empty($query)) {
                 $options['query'] = $query;
@@ -62,8 +73,6 @@ class APISistemas
      */
     public function self()
     {
-        $response = $this->get('usuario');
-
-        return $response;
+        return $this->get('usuario');
     }
 }
