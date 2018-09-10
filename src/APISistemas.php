@@ -21,7 +21,7 @@ class APISistemas
      * @param  string  $accessToken
      * @param  bool  $development
      */
-    public function __construct(string $accessToken, bool $development = false)
+    public function __construct(string $accessToken = null, bool $development = false)
     {
         $this->accessToken = $accessToken;
         $this->httpClient = new Client([
@@ -77,5 +77,21 @@ class APISistemas
     public function self()
     {
         return $this->get('usuario');
+    }
+
+    public function getClientCredentials(string $clientId, string $clientSecret, string $state = null)
+    {
+        $response = $this->httpClient->post('token', [
+            'form_params' => [
+                'grant_type' => 'client_credentials',
+                'client_id' => $clientId,
+                'client_secret' => $clientSecret,
+                'scope' => $state,
+            ],
+        ]);
+        $content = json_decode($response->getBody()->getContents());
+        $this->accessToken = $content->access_token;
+
+        return $content;
     }
 }
