@@ -11,9 +11,20 @@ class APISistemas
 
     const URL = 'https://apisistemas.ufs.br/api/rest/';
 
+    /**
+     * @var string
+     */
     protected $accessToken;
 
+    /**
+     * @var \GuzzleHttp\Client
+     */
     protected $httpClient;
+
+    /**
+     * @var int
+     */
+    protected $timeout = 0;
 
     /**
      * Cria uma nova instância da APISistemas.
@@ -54,6 +65,9 @@ class APISistemas
             $options['headers'] = [
                 'Authorization' => 'Bearer '.$this->accessToken,
             ];
+            if ($this->timeout) {
+                $options['timeout'] = $this->timeout;
+            }
             if (! empty($query)) {
                 $options['query'] = $query;
             }
@@ -63,8 +77,10 @@ class APISistemas
             return json_decode($content);
         } catch (GuzzleException $e) {
             return [
-                'code' => $e->getCode(),
-                'message' => $e->getMessage(),
+                'errors' => [
+                    'code' => $e->getCode(),
+                    'message' => $e->getMessage(),
+                ],
             ];
         }
     }
@@ -79,19 +95,49 @@ class APISistemas
         return $this->get('usuario');
     }
 
+    /**
+     * Efetua a requisição das Client Credentials da aplicação.
+     *
+     * @param  string  $clientId
+     * @param  string  $clientSecret
+     * @param  string|null  $state
+     * @return array|mixed
+     */
     public function getClientCredentials(string $clientId, string $clientSecret, string $state = null)
     {
-        $response = $this->httpClient->post('token', [
-            'form_params' => [
+        try {
+            $options['form_params'] = [
                 'grant_type' => 'client_credentials',
                 'client_id' => $clientId,
                 'client_secret' => $clientSecret,
                 'scope' => $state,
-            ],
-        ]);
-        $content = json_decode($response->getBody()->getContents());
-        $this->accessToken = $content->access_token;
+            ];
+            if ($this->timeout) {
+                $options['timeout'] = $this->timeout;
+            }
+            $response = $this->httpClient->post('token', $options);
+            $content = json_decode($response->getBody()->getContents(), true);
+            $this->accessToken = $content['access_token'];
 
-        return $content;
+            return $content;
+        }
+        catch (GuzzleException $e) {
+            return [
+                'errors' => [
+                    'code' => $e->getCode(),
+                    'message' => $e->getMessage(),
+                ],
+            ];
+        }
+    }
+
+    /**
+     * Define o tempo de timeout para ser utilizado nos requests.
+     *
+     * @param int $seconds
+     */
+    public function setTimeout(int $seconds)
+    {
+        $this->timeout = $seconds;
     }
 }
