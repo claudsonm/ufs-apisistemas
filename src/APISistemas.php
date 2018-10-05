@@ -29,8 +29,8 @@ class APISistemas
     /**
      * Cria uma nova instância da APISistemas.
      *
-     * @param  string  $accessToken
-     * @param  bool  $development
+     * @param string $accessToken
+     * @param bool   $development
      */
     public function __construct(string $accessToken = null, bool $development = false)
     {
@@ -43,8 +43,9 @@ class APISistemas
     /**
      * Retorna um arquivo da APISistemas.
      *
-     * @param  int  $id
-     * @param  string  $key
+     * @param int    $id
+     * @param string $key
+     *
      * @return mixed|string
      */
     public function arquivo(int $id, string $key)
@@ -55,8 +56,9 @@ class APISistemas
     /**
      * Faz a requisição ao caminho informado, podendo utilizar query strings.
      *
-     * @param  string  $path
-     * @param  array|null  $query
+     * @param string     $path
+     * @param null|array $query
+     *
      * @return array|mixed
      */
     public function get(string $path, array $query = null)
@@ -98,9 +100,10 @@ class APISistemas
     /**
      * Efetua a requisição das Client Credentials da aplicação.
      *
-     * @param  string  $clientId
-     * @param  string  $clientSecret
-     * @param  string|null  $state
+     * @param string      $clientId
+     * @param string      $clientSecret
+     * @param null|string $state
+     *
      * @return array|mixed
      */
     public function getClientCredentials(string $clientId, string $clientSecret, string $state = null)
@@ -120,8 +123,7 @@ class APISistemas
             $this->accessToken = $content['access_token'];
 
             return $content;
-        }
-        catch (GuzzleException $e) {
+        } catch (GuzzleException $e) {
             return [
                 'errors' => [
                     'code' => $e->getCode(),
