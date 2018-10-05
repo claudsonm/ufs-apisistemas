@@ -3,25 +3,38 @@
 namespace UFS;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 
 class APISistemas
 {
+    /**
+     * URI base do ambiente de desenvolvimento da APISistemas.
+     */
     const DEV_URL = 'https://apisistemas.desenvolvimento.ufs.br/api/rest/';
 
-    const URL = 'https://apisistemas.ufs.br/api/rest/';
+    /**
+     * URI base do ambiente de produção da APISistemas.
+     */
+    const URL = 'https://www.sistemas.ufs.br/api/rest/';
 
     /**
+     * Access token utilizado para fazer as requisições.
+     *
      * @var string
      */
     protected $accessToken;
 
     /**
+     * Cliente HTTP para realizar as requisições.
+     *
      * @var \GuzzleHttp\Client
      */
     protected $httpClient;
 
     /**
+     * Define o tempo de timeout das requisições.
+     *
      * @var int
      */
     protected $timeout = 0;
@@ -32,12 +45,10 @@ class APISistemas
      * @param string $accessToken
      * @param bool   $development
      */
-    public function __construct(string $accessToken = null, bool $development = false)
+    public function __construct(string $accessToken, bool $development = false)
     {
         $this->accessToken = $accessToken;
-        $this->httpClient = new Client([
-            'base_uri' => ($development ? self::DEV_URL : self::URL),
-        ]);
+        $this->httpClient = self::makeHttpClient($development);
     }
 
     /**
@@ -46,7 +57,7 @@ class APISistemas
      * @param int    $id
      * @param string $key
      *
-     * @return mixed|string
+     * @return array
      */
     public function arquivo(int $id, string $key)
     {
@@ -54,12 +65,12 @@ class APISistemas
     }
 
     /**
-     * Faz a requisição ao caminho informado, podendo utilizar query strings.
+     * Faz a requisição ao endpoint informado, podendo utilizar query strings.
      *
      * @param string     $path
-     * @param null|array $query
+     * @param array|null $query
      *
-     * @return array|mixed
+     * @return array
      */
     public function get(string $path, array $query = null)
     {
@@ -76,8 +87,46 @@ class APISistemas
             $response = $this->httpClient->request('GET', $path, $options);
             $content = $response->getBody()->getContents();
 
-            return json_decode($content);
+            return json_decode($content, true);
         } catch (GuzzleException $e) {
+            return [
+                'errors' => [
+                    'code' => $e->getCode(),
+                    'message' => $e->getMessage(),
+                ],
+            ];
+        }
+    }
+
+    /**
+     * Efetua a requisição das Client Credentials da aplicação.
+     *
+     * @param string      $clientId
+     * @param string      $clientSecret
+     * @param string|null $state
+     * @param bool        $development
+     *
+     * @return array
+     */
+    public static function getClientCredentials(
+        string $clientId,
+        string $clientSecret,
+        string $state = null,
+        bool $development = false
+    ) {
+        try {
+            $options['form_params'] = [
+                'grant_type' => 'client_credentials',
+                'client_id' => $clientId,
+                'client_secret' => $clientSecret,
+                'scope' => $state,
+            ];
+            $httpClient = self::makeHttpClient($development);
+            $response = $httpClient->post('token', $options);
+            $content = $response->getBody()->getContents();
+
+            return json_decode($content, true);
+        } catch (ClientException $e) {
             return [
                 'errors' => [
                     'code' => $e->getCode(),
@@ -90,7 +139,7 @@ class APISistemas
     /**
      * Realiza uma requisição ao endpoint que retorna os dados do usuário.
      *
-     * @return mixed|string
+     * @return array
      */
     public function self()
     {
@@ -98,39 +147,13 @@ class APISistemas
     }
 
     /**
-     * Efetua a requisição das Client Credentials da aplicação.
+     * Altera o access token utilizado pela classe.
      *
-     * @param string      $clientId
-     * @param string      $clientSecret
-     * @param null|string $state
-     *
-     * @return array|mixed
+     * @param string $token
      */
-    public function getClientCredentials(string $clientId, string $clientSecret, string $state = null)
+    public function setAccessToken(string $token)
     {
-        try {
-            $options['form_params'] = [
-                'grant_type' => 'client_credentials',
-                'client_id' => $clientId,
-                'client_secret' => $clientSecret,
-                'scope' => $state,
-            ];
-            if ($this->timeout) {
-                $options['timeout'] = $this->timeout;
-            }
-            $response = $this->httpClient->post('token', $options);
-            $content = json_decode($response->getBody()->getContents(), true);
-            $this->accessToken = $content['access_token'];
-
-            return $content;
-        } catch (GuzzleException $e) {
-            return [
-                'errors' => [
-                    'code' => $e->getCode(),
-                    'message' => $e->getMessage(),
-                ],
-            ];
-        }
+        $this->accessToken = $token;
     }
 
     /**
@@ -141,5 +164,17 @@ class APISistemas
     public function setTimeout(int $seconds)
     {
         $this->timeout = $seconds;
+    }
+
+    /**
+     * Cria o cliente HTTP para ser utilizado nas requisições.
+     *
+     * @param bool $development
+     *
+     * @return \GuzzleHttp\Client
+     */
+    private static function makeHttpClient(bool $development)
+    {
+        return new Client(['base_uri' => ($development ? self::DEV_URL : self::URL)]);
     }
 }
