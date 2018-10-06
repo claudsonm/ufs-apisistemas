@@ -66,18 +66,25 @@ class APISistemas
 
     /**
      * Faz a requisição ao endpoint informado, podendo utilizar query strings.
+     * Retorna um array associativo por padrão, podendo retornar um objeto
+     * ao inserir o elemento 'assoc_decode' no array de query strings.
      *
-     * @param string     $path
-     * @param array|null $query
+     * @param string $path
+     * @param array  $query
      *
-     * @return array
+     * @return array|mixed
      */
-    public function get(string $path, array $query = null)
+    public function get(string $path, array $query = [])
     {
         try {
-            $options['headers'] = [
-                'Authorization' => 'Bearer '.$this->accessToken,
-            ];
+            // Define se o retorno será um objeto ou array associativo
+            $assocDecode = true;
+            if (array_key_exists('assoc_decode', $query)) {
+                $assocDecode = $query['assoc_decode'];
+                unset($query['assoc_decode']);
+            }
+            // Define os parâmetros da requisição
+            $options['headers'] = ['Authorization' => 'Bearer '.$this->accessToken];
             if ($this->timeout) {
                 $options['timeout'] = $this->timeout;
             }
@@ -87,7 +94,7 @@ class APISistemas
             $response = $this->httpClient->request('GET', $path, $options);
             $content = $response->getBody()->getContents();
 
-            return json_decode($content, true);
+            return json_decode($content, $assocDecode);
         } catch (GuzzleException $e) {
             return [
                 'errors' => [

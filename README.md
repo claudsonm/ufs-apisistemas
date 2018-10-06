@@ -29,6 +29,9 @@ $api = new \UFS\APISistemas($credentials['access_token'], true);
 // Realização de uma requisição ao endpoint solicitado com um query parameter
 $result = $api->get('departamentos', ['limit' => 10]);
 
+// Altera o tipo de retorno para um objetivo ao invés de um array associativo
+$result = $api->get('departamentos', ['limit' => 10, 'assoc_decode' => false]);
+
 /**
  * MÉTODOS DISPONÍVEIS
  * Para acessar endpoints privados será necessário utilizar a classe com um
